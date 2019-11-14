@@ -19,13 +19,28 @@ include_once(DOKU_GCAL.'user/local_conf.php');   # load user-settings
 include_once(DOKU_GCAL.'lang/en/lang.php');      # the localisation is loaded in the renderer
 
 
+
+// ----------------------------------------------------------------------------------------------------
+// - Display Errors
+// ----------------------------------------------------------------------------------------------------
+//ini_set('display_errors', 'On');
+//ini_set('html_errors', 0);
+
+// ----------------------------------------------------------------------------------------------------
+// - Error Reporting
+// ----------------------------------------------------------------------------------------------------
+//error_reporting(0xfff7);
+
+
+
+
 /**
  *  class syntax_plugin_gcalendar
  *
  *  @author     Frank Hinkel<Frank [at] hi-sys [dot] de>
  */
-class syntax_plugin_gcalendar extends DokuWiki_Syntax_Plugin {
 
+class syntax_plugin_gcalendar extends DokuWiki_Syntax_Plugin {
     function getInfo(){
         $lcDate = substr('$LastChangedDate: 2006-12-19 22:42:04 +0100 (Di, 19 Dez 2006) $',18,10);
         $rev    = substr('$LastChangedRevision: 89 $',22);
@@ -50,7 +65,8 @@ class syntax_plugin_gcalendar extends DokuWiki_Syntax_Plugin {
     function connectTo($mode) {
         $this->Lexer->addSpecialPattern('<gcal>|<gcal .*?>',$mode,'plugin_gcalendar');
     }
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler) //AlexK change interface in order to fit base class
+	{
 
         switch ($state) {
           case DOKU_LEXER_SPECIAL :
@@ -61,7 +77,8 @@ class syntax_plugin_gcalendar extends DokuWiki_Syntax_Plugin {
         }
     }
 
-    function render($mode, &$renderer, $indata) {
+    function render($mode, Doku_Renderer $renderer, $indata) //AlexK change interface in order to fit base class
+	{ 
     global $lang;
     global $conf;
 
@@ -75,12 +92,12 @@ class syntax_plugin_gcalendar extends DokuWiki_Syntax_Plugin {
               $data = html_entity_decode($data);
 
               # read parameters into options-array for better access
-              $options_arr = explode(' ',$data);
+              $options_arr = explode(' ',$data); //AlexK replace not supported split()
               if(!is_array($options_arr)) return false;
 
               $options = array();
               foreach($options_arr as $values) {
-                list($k,$v)=split('=',$values);
+                list($k,$v)=explode('=',$values); //AlexK replace not supported split()
                 if(!isset($v)) $v=$k;
                 $options[$k]=$v;
               }

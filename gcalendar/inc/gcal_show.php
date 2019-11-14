@@ -15,6 +15,7 @@
  * @param  string end_date
  *
  */
+
 function show_gCal_page(&$options,&$pages,$start_date,$end_date) {
   global $lang;
   global $conf;
@@ -174,7 +175,7 @@ function show_day(&$options,$day,&$pages,$date_format) {
      $pagelist = substr($pagelist,-1);
 
      $cell = "";
-     $cat ="";
+     $cat =array(); //Alexander Kessler
      $cat_classes = "";
      $style = "";
      $events = $gCal_data[$page_key][$date];
